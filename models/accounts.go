@@ -7,22 +7,29 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"os"
 	"strings"
+	uuid "github.com/satori/go.uuid"
+	"time"
+
 )
 
 /*
 JWT claims struct
 */
 type Token struct {
-	UserId uint
+	UserId  string `json:"uuid" gorm:"primary_key"`
+	//UUID      string `json:"uuid" gorm:"primary_key"`
 	jwt.StandardClaims
 }
 
 //a struct to rep user account
 type Account struct {
 	gorm.Model
+	UUID      string `json:"uuid" gorm:"primary_key"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Token    string `json:"token";sql:"-"`
+	Birthdate  time.Time `json:"birthdate"`
+	Accesslevel uint `json:"access_level"`
 }
 
 //Validate incoming user details...
@@ -59,15 +66,16 @@ func (account *Account) Create() (map[string]interface{}) {
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(account.Password), bcrypt.DefaultCost)
 	account.Password = string(hashedPassword)
+	account.UUID = uuid.NewV4().String()
 
 	GetDB().Create(account)
-
-	if account.ID <= 0 {
+	/*if account.ID <= 0 {
 		return u.Message(false, "Failed to create account, connection error.")
-	}
+	}*/
 
 	//Create new JWT token for the newly registered account
-	tk := &Token{UserId: account.ID}
+	//u.UUID = uuid.NewV4().String()
+	tk := &Token{UserId: uuid.NewV4().String()}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 	account.Token = tokenString
@@ -98,7 +106,8 @@ func Login(email, password string) (map[string]interface{}) {
 	account.Password = ""
 
 	//Create JWT token
-	tk := &Token{UserId: account.ID}
+	id := uuid.NewV4().String()
+	tk := &Token{UserId: id}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 	account.Token = tokenString //Store the token in the response
@@ -119,3 +128,5 @@ func GetUser(u uint) *Account {
 	acc.Password = ""
 	return acc
 }
+
+

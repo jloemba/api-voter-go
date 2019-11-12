@@ -6,13 +6,17 @@ import (
 	"github.com/api-projet/models"
 	u "github.com/api-projet/utils"
 	"net/http"
+
 )
 
 var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 
 	account := &models.Account{}
+	
 	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
+	
 	fmt.Println(account)
+	
 	//fmt.Println(err)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Invalid request"))
