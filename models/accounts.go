@@ -9,7 +9,6 @@ import (
 	"strings"
 	uuid "github.com/satori/go.uuid"
 	"time"
-
 )
 
 /*

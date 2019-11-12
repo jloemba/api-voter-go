@@ -18,6 +18,10 @@ func main() {
 	router.HandleFunc("/api/contacts/new", controllers.CreateContact).Methods("POST")
 	router.HandleFunc("/api/me/contacts", controllers.GetContactsFor).Methods("GET") //  user/2/contacts
 	//router.HandleFunc("/api/me/accounts", controllers.GetContactsFor).Methods("GET") //  user/2/contacts
+	router.HandleFunc("/api/vote/create", controllers.CreateVote).Methods("POST")
+	router.HandleFunc("/api/vote/update/{id}", controllers.EditVote).Methods("POST")
+	router.HandleFunc("/api/vote/delete/{id}", controllers.DeleteVote).Methods("DELETE")
+
 
 	router.Use(app.JwtAuthentication) //attach JWT auth middleware
 

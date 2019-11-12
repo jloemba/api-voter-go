@@ -6,7 +6,6 @@ import (
 	"github.com/api-projet/models"
 	u "github.com/api-projet/utils"
 	"net/http"
-
 )
 
 var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
