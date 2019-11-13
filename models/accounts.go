@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	u "github.com/api-projet/utils"
@@ -99,9 +100,116 @@ func DeleteUserHandler(uuid string) (map[string]interface{}) {
 		return response
 	}
 	var checkAccount Account
-	db.Where("name = ?", uuid).Find(&checkAccount)
+	db.Where("uuid = ?", uuid).Find(&checkAccount)
 	db.Delete(&checkAccount)
 	response := u.Message(true, "le compte a été supprimé")
+	return response
+}
+
+// PutUserHandler is updating a user from the given uuid param.
+func PutUserHandler(params string,json *Account) (map[string]interface{}) {
+/*
+	account.UUID = uuid
+	var checkAccount Account
+	checkAccount.UUID = uuid
+	//err := db.Where("uuid = ?", uuid).Find(&checkAccount)
+	err := GetDB().Table("accounts").Where("uuid = ?", uuid).First(account).Error
+
+
+	fmt.Println(account)
+
+	//si le sujet de vote n'existe pas
+	if err == nil {
+		return u.Message(false, "Il n'y a aucun user avec cette uuid")
+	}
+
+	if len(account.Email) > 0 {
+		checkAccount.Email = account.Email
+	}
+	if !account.Birthdate.IsZero() {
+		checkAccount.Birthdate = account.Birthdate
+	}
+	if len(account.Password) > 0 {
+		checkAccount.Password = account.Password
+	}
+	if account.Accesslevel <= 0 {
+		checkAccount.Accesslevel = account.Accesslevel
+	}
+
+	if resp, ok := checkAccount.Validate(); !ok {
+		return resp
+	}
+	checkAccount.UpdatedAt = time.Now()
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(checkAccount.Password), bcrypt.DefaultCost)
+	checkAccount.Password = string(hashedPassword)
+	
+	if err := GetDB().Update(checkAccount); err != nil {
+		response := u.Message(false, "update n'a pas fonctionner")
+		return response
+	}
+	response := u.Message(true, "update a fonctionner")
+	response["account"] = checkAccount
+	return response
+
+
+ */
+
+
+	temp := &Account{}
+
+
+	fmt.Println("aaaa")
+	fmt.Println(params)
+	fmt.Println("zzzzz")
+
+
+	fmt.Println(temp)
+
+	err := GetDB().Table("accounts").Where("ID = ?", params).First(temp).Error
+
+	fmt.Println(err)
+
+	fmt.Println(json.Email)
+	fmt.Println(json.Password)
+	fmt.Println(json.Birthdate)
+	fmt.Println(json.Accesslevel)
+
+	//si le sujet de vote n'existe pas
+	if err != nil{
+		return u.Message(false, "Il n'y a aucun user avec cette id")
+	}else{
+		//fmt.Println(err)
+		if(json.Email != ""){
+			temp.Email = json.Email
+		}
+
+		if(json.Password != ""){
+			temp.Password = json.Password
+		}
+
+		if(!json.Birthdate.IsZero()){
+			temp.Birthdate = json.Birthdate
+		}
+
+		if(json.Accesslevel <= 0 ){
+			temp.Accesslevel = json.Accesslevel
+		}
+
+		if resp, ok := temp.Validate(); !ok {
+			return resp
+		}
+		temp.UpdatedAt = time.Now()
+		fmt.Println(temp)
+
+		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(temp.Password), bcrypt.DefaultCost)
+		temp.Password = string(hashedPassword)
+
+		GetDB().Model(&temp).Update(temp)
+	}
+
+	response := u.Message(true, "L'user a été édité")
+	response["user"] = temp
 	return response
 }
 
