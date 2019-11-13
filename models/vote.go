@@ -9,6 +9,10 @@ import (
 
 )
 
+//type UUIDVote struct{
+	//UUIDuser [10]string `json:"user"`
+//}
+
 
 //a struct to rep user account
 type Vote struct {
@@ -50,8 +54,8 @@ func (vote *Vote) Validate() (map[string]interface{}, bool) {
 		temp := &Vote{}
 
 		//check for errors and duplicate emails
-		err := GetDB().Table("vote").Where("uuid = ?", temp.UUID).First(temp).Error
-		if err == gorm.ErrRecordNotFound {
+		err := GetDB().Table("votes").Where("uuid = ?", temp.UUID).First(temp).Error
+		if err != gorm.ErrRecordNotFound {
 			return u.Message(false, "Vote non trouvé"), false
 		}
 		if temp.Title != "" {
@@ -140,9 +144,10 @@ func DeleteVote(params string, json *Vote)  (map[string]interface{}) {
 
 func SingleVote(params string, json *Vote)  (map[string]interface{}) {
 
-	row := &Vote{}
-	err := GetDB().Table("votes").Where("UUID = ?", params).First(row).Error
+	fmt.Println("eeee")
 
+	row := &Vote{}
+	err := GetDB().Table("vote").Where("UUID = ?", params).First(row).Error
 	if row.Title == "" {
 		fmt.Println(err)
 		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
@@ -155,3 +160,34 @@ func SingleVote(params string, json *Vote)  (map[string]interface{}) {
 }
 
 
+func SubmitVote(uuidvote string , uuidaccount string,token string) (map[string]interface{}) {
+
+	fmt.Println("ddddd")
+	//récupérer le vote
+	rowVote := &Vote{}
+	err := GetDB().Table("votes").First(rowVote).Error
+	if err == nil{
+		return u.Message(false,"Not found")
+	}
+
+	fmt.Println(rowVote)
+
+
+	//modifier le vote pour y mettre l'uuidvote 
+	rowAccount := &Account{}
+	erraccount := GetDB().Table("accounts").First(rowAccount).Error
+
+	if erraccount == nil{
+		return u.Message(false,"Not found")
+	}
+	
+	fmt.Println(rowAccount)
+	//
+	//vote.UUID = uuid.NewV4().String()
+
+	//GetDB().Create(vote)
+
+	response := u.Message(true, "Le sujet de vote a été créé")
+	//response["vote"] = vote
+	return response
+}
