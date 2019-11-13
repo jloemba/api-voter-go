@@ -32,6 +32,7 @@ func init() {
 
 	db = conn
 	db.Debug().AutoMigrate(&Account{}, &Contact{} , &Vote{})
+
 }
 
 func GetDB() *gorm.DB {
