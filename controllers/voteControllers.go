@@ -34,7 +34,7 @@ var EditVote = func(w http.ResponseWriter, r *http.Request) {
 	
 	err := json.NewDecoder(r.Body).Decode(vote) //decode the request body into struct and failed if any error occur
 	
-	params := mux.Vars(r)
+	params := mux.Vars(r)["uuid"]
 	fmt.Println(reflect.TypeOf(params))
 	if err != nil {
 		u.Respond(w, u.Message(false, "Invalid request"))
@@ -50,10 +50,20 @@ var DeleteVote = func(w http.ResponseWriter, r *http.Request) {
 
 	vote := &models.Vote{}
 		
-	params := mux.Vars(r)
+	params := mux.Vars(r)["uuid"]
 
 	fmt.Println(reflect.TypeOf(params))
 
 	resp := models.DeleteVote(params,vote) //Create account
+	u.Respond(w, resp)
+}
+
+var SingleVote = func(w http.ResponseWriter, r *http.Request) {
+
+	vote := &models.Vote{}
+		
+	params := mux.Vars(r)["uuid"]
+
+	resp := models.SingleVote(params,vote) //Create account
 	u.Respond(w, resp)
 }

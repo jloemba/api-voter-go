@@ -69,6 +69,7 @@ func (vote *Vote) Validate() (map[string]interface{}, bool) {
 func (vote *Vote) Create() (map[string]interface{}) {
 
 	if resp, ok := vote.Validate(); !ok {
+		//fmt.Println(resp)
 		return resp
 	}
 
@@ -81,62 +82,77 @@ func (vote *Vote) Create() (map[string]interface{}) {
 	return response
 }
 
-func UpdateVote(params interface{},json *Vote) (map[string]interface{}) {
+func UpdateVote(params string,json *Vote) (map[string]interface{}) {
 
-	temp := &Vote{}
-	err := GetDB().Table("vote").Where("ID = ?", params).First(temp).Error
-	
-	//fmt.Println(json)
+	row := &Vote{}
+	err := GetDB().Table("votes").Where("UUID = ?", params).First(row).Error
+	fmt.Println(err)
 
 	//si le sujet de vote n'existe pas
-	if err == nil || err == gorm.ErrRecordNotFound {
+	if row.Title == "" {
 		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
 	}else{
 		//fmt.Println(err)
 		if(json.Title != ""){
-			temp.Title = json.Title
+			row.Title = json.Title
 		}
 
 		if(json.Description != ""){
-			temp.Description = json.Description
+			row.Description = json.Description
 		}
 
 		if(json.StartDate.IsZero()){
-			temp.StartDate = json.StartDate
+			row.StartDate = json.StartDate
 		}
 
 		if(json.EndDate.IsZero()){
-			temp.EndDate = json.StartDate
+			row.EndDate = json.StartDate
 		}
-		
 
-		temp.UpdatedAt = time.Now()
+		row.UpdatedAt = time.Now()
 
-		GetDB().Update(temp)
+		GetDB().Model(&row).Update(row)
 	}
 
 	response := u.Message(true, "Le sujet de vote a été édité")
-	response["vote"] = temp
+	response["vote"] = row
 	return response
 }
 
-func DeleteVote(params interface{}, json *Vote)  (map[string]interface{}) {
-	temp := &Vote{}
-	err := GetDB().Table("vote").Where("ID = ?", params).First(temp).Error
+func DeleteVote(params string, json *Vote)  (map[string]interface{}) {
+	row := &Vote{}
+	err := GetDB().Table("votes").Where("UUID = ?", params).First(row).Error
 	
 	//si le sujet de vote n'existe pas
-	if err == nil || err == gorm.ErrRecordNotFound {
+	if row.Title == "" {
+		fmt.Println(err)
 		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
 	}
 		//var checkVote Vote
 		//db.Where("ID = ?", params).Find(&checkVote)
-	db.Delete(&temp)
+	db.Delete(&row)
 	
 
-	response := u.Message(true, "Le sujet de vote a été supprimé")
-	response["vote"] = temp
+	response := u.Message(true, "Ce sujet de vote a bien été supprimé")
+	response["vote"] = row
 	return response
 
 } 
+
+func SingleVote(params string, json *Vote)  (map[string]interface{}) {
+
+	row := &Vote{}
+	err := GetDB().Table("votes").Where("UUID = ?", params).First(row).Error
+
+	if row.Title == "" {
+		fmt.Println(err)
+		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
+	}
+
+	response := u.Message(true, "Le sujet de vote")
+	response["vote"] = row
+	return response
+
+}
 
 
