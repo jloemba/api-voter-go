@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	u "github.com/api-projet/utils"
@@ -106,17 +107,20 @@ func DeleteUserHandler(uuid string) (map[string]interface{}) {
 }
 
 // PutUserHandler is updating a user from the given uuid param.
-func (account *Account) PutUserHandler(uuid string) (map[string]interface{}) {
-
+func PutUserHandler(params string,json *Account) (map[string]interface{}) {
+/*
+	account.UUID = uuid
 	var checkAccount Account
-	err := db.Where("uuid = ?", uuid).Find(&checkAccount)
+	checkAccount.UUID = uuid
+	//err := db.Where("uuid = ?", uuid).Find(&checkAccount)
+	err := GetDB().Table("accounts").Where("uuid = ?", uuid).First(account).Error
 
 
-	//fmt.Println(json)
+	fmt.Println(account)
 
 	//si le sujet de vote n'existe pas
 	if err == nil {
-		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
+		return u.Message(false, "Il n'y a aucun user avec cette uuid")
 	}
 
 	if len(account.Email) > 0 {
@@ -145,7 +149,67 @@ func (account *Account) PutUserHandler(uuid string) (map[string]interface{}) {
 		return response
 	}
 	response := u.Message(true, "update a fonctionner")
-	response["account"] = account
+	response["account"] = checkAccount
+	return response
+
+
+ */
+
+
+	temp := &Account{}
+
+
+	fmt.Println("aaaa")
+	fmt.Println(params)
+	fmt.Println("zzzzz")
+
+
+	fmt.Println(temp)
+
+	err := GetDB().Table("accounts").Where("ID = ?", params).First(temp).Error
+
+	fmt.Println(err)
+
+	fmt.Println(json.Email)
+	fmt.Println(json.Password)
+	fmt.Println(json.Birthdate)
+	fmt.Println(json.Accesslevel)
+
+	//si le sujet de vote n'existe pas
+	if err != nil{
+		return u.Message(false, "Il n'y a aucun user avec cette id")
+	}else{
+		//fmt.Println(err)
+		if(json.Email != ""){
+			temp.Email = json.Email
+		}
+
+		if(json.Password != ""){
+			temp.Password = json.Password
+		}
+
+		if(!json.Birthdate.IsZero()){
+			temp.Birthdate = json.Birthdate
+		}
+
+		if(json.Accesslevel <= 0 ){
+			temp.Accesslevel = json.Accesslevel
+		}
+
+		if resp, ok := temp.Validate(); !ok {
+			return resp
+		}
+		temp.UpdatedAt = time.Now()
+		fmt.Println(temp)
+
+		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(temp.Password), bcrypt.DefaultCost)
+		temp.Password = string(hashedPassword)
+
+		GetDB().Model(&temp).Update(temp)
+	}
+
+	response := u.Message(true, "L'user a été édité")
+	response["user"] = temp
 	return response
 }
 
