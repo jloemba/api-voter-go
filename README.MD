@@ -45,4 +45,31 @@ Put: localhost:8888/api/user/put/{uuid_voulu}
 "password":"marthajjjj77777"
 }
 
+<br>
+
+Post: localhost:8888/api/vote/create
+
+{
+"title":"Propreté des trottoirs",
+"description":"Dans le budget qui sera soumis au vote des conseillers de Paris lundi, 32 M€ seront consacrés à l’achat de nouvelles machines, plus silencieuses, plus propres et plus performantes. Il n’y aura pas d’embauche d’agents supplémentair.",
+"start_date":"2019-12-01T17:23:05.636849176+01:00",
+ "end_date":"2019-12-10T17:23:05.636849176+01:00"
+}
+
+<br>
+
+Delete: localhost:8888/api/vote/delete/{id_voulu}
+
+<br>
+
+Put: localhost:8888/api/vote/update/{id_voulu}
+
+{
+"title":"Présidentiel United States",
+"description":"Campagne présidentiel United States"
+}
+
+<br>
+
+Get: localhost:8888/api/vote/show/{uuid}
 
