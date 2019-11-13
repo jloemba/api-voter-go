@@ -9,6 +9,7 @@ Utilisez le makefile pour:
 
 ##Postman
 #####pour une utilisation postman voici les différentes routes avec des examples de json:
+<br>
 
 Post: localhost:8888/api/user/new
 
@@ -20,6 +21,7 @@ Post: localhost:8888/api/user/new
 "birthdate":"1995-01-01T00:00:00Z"
 }
 
+<br>
 
 Post: localhost:8888/api/user/login
 
@@ -28,8 +30,11 @@ Post: localhost:8888/api/user/login
 "password":"marthajjjj88"
 }
 
+<br>
 
 Delete: localhost:8888/api/user/delete/{uuid_voulu}
+
+<br>
 
 Put: localhost:8888/api/user/put/{uuid_voulu}
 

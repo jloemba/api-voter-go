@@ -7,7 +7,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"os"
 	"regexp"
-	"strings"
 	uuid "github.com/satori/go.uuid"
 	"time"
 )
