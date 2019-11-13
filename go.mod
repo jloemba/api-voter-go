@@ -7,6 +7,7 @@ require (
 	github.com/jinzhu/gorm v1.9.11
 	github.com/joho/godotenv v1.3.0
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/lib/pq v1.1.1
 	github.com/satori/go.uuid v1.2.0
 	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
 	google.golang.org/appengine v1.6.5 // indirect

@@ -6,7 +6,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"time"
 	u "github.com/api-projet/utils"
-
+	"github.com/lib/pq"
 )
 
 
@@ -16,7 +16,7 @@ type Vote struct {
 	UUID      string `json:"uuid" gorm:"primary_key"`
 	Title    string `json:"title"`
 	Description string `json:"description"`
-	UUIDVote    string `json:"uuidvote"`
+	UUIDVote    pq.StringArray `gorm:"type:varchar(64)[]"`
 	StartDate  time.Time `json:"start_date"`
 	EndDate  time.Time `json:"end_date"`
 
@@ -50,7 +50,7 @@ func (vote *Vote) Validate() (map[string]interface{}, bool) {
 		temp := &Vote{}
 
 		//check for errors and duplicate emails
-		err := GetDB().Table("vote").Where("uuid = ?", temp.UUID).First(temp).Error
+		err := GetDB().Table("votes").Where("uuid = ?", temp.UUID).First(temp).Error
 		if err == gorm.ErrRecordNotFound {
 			return u.Message(false, "Vote non trouvé"), false
 		}
@@ -155,3 +155,38 @@ func SingleVote(params string, json *Vote)  (map[string]interface{}) {
 }
 
 
+func SubmitVote(uuidvote string , uuidaccount string) (map[string]interface{}) {
+
+	fmt.Println(uuidvote)
+	fmt.Println(uuidaccount)
+
+	//modifier le vote pour y mettre l'uuidvote 
+	rowAccount := &Account{}
+	erraccount := GetDB().First(&rowAccount, uuidaccount)
+	//fmt.Println(rowAccount)
+
+	if erraccount != nil{
+		//return u.Message(false,"Not found")
+	}
+
+
+
+	//fmt.Println("ddddd")
+	//récupérer le vote
+	rowVote := &Vote{}
+	err := GetDB().First(&rowVote, uuidvote)
+	fmt.Println(uuidaccount)
+	rowVote.UUIDVote = append(rowVote.UUIDVote, uuidaccount)
+	//err := GetDB().Table("votes").Where("uuid_vote = ?", uuidvote).First(rowVote).Error
+	//fmt.Println(rowVote)
+	//fmt.Println("dddddd 2")
+
+
+	if err != nil{
+		//return u.Message(false,"Not found")
+	}
+
+	response := u.Message(true, "Le sujet de vote a été créé")
+	response["vote"] = rowVote
+	return response
+}

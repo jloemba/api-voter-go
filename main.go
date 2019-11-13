@@ -20,6 +20,7 @@ func main() {
 	router.HandleFunc("/api/vote/update/{uuid}", controllers.EditVote).Methods("PUT")
 	router.HandleFunc("/api/vote/show/{uuid}", controllers.SingleVote).Methods("GET")
 	router.HandleFunc("/api/vote/delete/{uuid}", controllers.DeleteVote).Methods("DELETE")
+	router.HandleFunc("/api/vote/submit", controllers.SubmitVote).Methods("POST")
 
 	//router.NotFoundHandler = app.NotFoundHandler
 

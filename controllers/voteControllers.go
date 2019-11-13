@@ -62,3 +62,20 @@ var SingleVote = func(w http.ResponseWriter, r *http.Request) {
 	resp := models.SingleVote(params,vote)
 	u.Respond(w, resp)
 }
+
+var SubmitVote = func(w http.ResponseWriter, r *http.Request) {
+
+	//fmt.Println("deeeeeee")
+
+	//fmt.Println(mux.Vars(r))
+
+	uuidvote := mux.Vars(r)["uuidvote"]
+	uuidaccount := mux.Vars(r)["uuid"]
+	//token := mux.Vars(r)["token-user"]
+
+	//fmt.Println("deeeeeee 2")
+	resp := models.SubmitVote(uuidvote,uuidaccount) //Create account
+	//fmt.Println("deeeeeee 3")
+
+	u.Respond(w, resp)
+}
