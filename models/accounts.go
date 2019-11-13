@@ -87,6 +87,26 @@ func (account *Account) Create() (map[string]interface{}) {
 	return response
 }
 
+
+
+// DeleteUserHandler is deleting a user from the given uuid param.
+func DeleteUserHandler(uuid string) (map[string]interface{}) {
+	account := &Account{}
+	account.UUID = uuid
+	err := GetDB().Table("accounts").Where("uuid = ?", uuid).First(account).Error
+	if err != nil {
+		response := u.Message(false, "Le compte n'existe pas")
+		return response
+	}
+	var checkAccount Account
+	db.Where("name = ?", uuid).Find(&checkAccount)
+	db.Delete(&checkAccount)
+	response := u.Message(true, "le compte a été supprimé")
+	return response
+}
+
+
+
 func Login(email, password string) (map[string]interface{}) {
 
 	account := &Account{}

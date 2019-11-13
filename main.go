@@ -17,6 +17,7 @@ func main() {
 	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 
 	router.Use(app.JwtAuthentication) //attach JWT auth middleware
+	router.HandleFunc("/api/user/delete/{uuid}", controllers.DeleteUser).Methods("DELETE")
 
 	//router.NotFoundHandler = app.NotFoundHandler
 

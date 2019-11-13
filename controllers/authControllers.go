@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/api-projet/models"
 	u "github.com/api-projet/utils"
+	"github.com/gorilla/mux"
 	"net/http"
-
 )
 
 var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
@@ -39,3 +39,19 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 	resp := models.Login(account.Email, account.Password)
 	u.Respond(w, resp)
 }
+
+
+var DeleteUser = func(w http.ResponseWriter, r *http.Request) {
+
+	param := mux.Vars(r)
+	w.WriteHeader(http.StatusOK)
+	if len(param["uuid"]) < 1 {
+		fmt.Println("L'url n'a pas de uuid")
+		return
+	}
+	key := param["uuid"]
+
+	resp := models.DeleteUserHandler(key)
+	u.Respond(w, resp)
+}
+
