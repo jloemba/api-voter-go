@@ -9,9 +9,9 @@ import (
 
 )
 
-type UUIDVote struct{
-	user [10]string `json:"user"`
-}
+//type UUIDVote struct{
+	//UUIDuser [10]string `json:"user"`
+//}
 
 
 //a struct to rep user account
@@ -20,7 +20,7 @@ type Vote struct {
 	UUID      string `json:"uuid" gorm:"primary_key"`
 	Title    string `json:"title"`
 	Description string `json:"description"`
-	UUIDVote    UUIDVote
+	UUIDVote    string `json:"uuidvote"`
 	StartDate  time.Time `json:"start_date"`
 	EndDate  time.Time `json:"end_date"`
 
@@ -54,8 +54,8 @@ func (vote *Vote) Validate() (map[string]interface{}, bool) {
 		temp := &Vote{}
 
 		//check for errors and duplicate emails
-		err := GetDB().Table("vote").Where("uuid = ?", temp.UUID).First(temp).Error
-		if err == gorm.ErrRecordNotFound {
+		err := GetDB().Table("votes").Where("uuid = ?", temp.UUID).First(temp).Error
+		if err != gorm.ErrRecordNotFound {
 			return u.Message(false, "Vote non trouvé"), false
 		}
 		if temp.Title != "" {
@@ -145,9 +145,10 @@ func DeleteVote(params string, json *Vote)  (map[string]interface{}) {
 
 func SingleVote(params string, json *Vote)  (map[string]interface{}) {
 
-	row := &Vote{}
-	err := GetDB().Table("votes").Where("UUID = ?", params).First(row).Error
+	fmt.Println("eeee")
 
+	row := &Vote{}
+	err := GetDB().Table("vote").Where("UUID = ?", params).First(row).Error
 	if row.Title == "" {
 		fmt.Println(err)
 		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
@@ -160,18 +161,28 @@ func SingleVote(params string, json *Vote)  (map[string]interface{}) {
 }
 
 
-func SubmitVote(uuidvote string , uuidaccount string ) (map[string]interface{}) {
+func SubmitVote(uuidvote string , uuidaccount string,token string) (map[string]interface{}) {
 
+	fmt.Println("ddddd")
 	//récupérer le vote
 	rowVote := &Vote{}
-	voteFound := GetDB().Table("votes").Where("UUID = ?", uuidvote).First(rowVote).Error
+	err := GetDB().Table("votes").First(rowVote).Error
+	if err == nil{
+		return u.Message(false,"Not found")
+	}
+
+	fmt.Println(rowVote)
 
 
 	//modifier le vote pour y mettre l'uuidvote 
 	rowAccount := &Account{}
-	accountFound := GetDB().Table("account").Where("UUID = ?", uuidaccount).First(rowAccount).Error
+	erraccount := GetDB().Table("accounts").First(rowAccount).Error
 
-
+	if erraccount == nil{
+		return u.Message(false,"Not found")
+	}
+	
+	fmt.Println(rowAccount)
 	//
 	//vote.UUID = uuid.NewV4().String()
 

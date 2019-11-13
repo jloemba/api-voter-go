@@ -58,6 +58,8 @@ var DeleteVote = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
+
+
 var SingleVote = func(w http.ResponseWriter, r *http.Request) {
 
 	vote := &models.Vote{}
@@ -65,5 +67,23 @@ var SingleVote = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)["uuid"]
 
 	resp := models.SingleVote(params,vote) //Create account
+	u.Respond(w, resp)
+}
+
+
+var SubmitVote = func(w http.ResponseWriter, r *http.Request) {
+
+	//fmt.Println("deeeeeee")
+
+	//fmt.Println(mux.Vars(r))
+
+	uuidvote := mux.Vars(r)["uuidvote"]
+	uuidaccount := mux.Vars(r)["uuidaccount"]
+	token := mux.Vars(r)["token-user"]
+
+	//fmt.Println("deeeeeee 2")
+	resp := models.SubmitVote(uuidvote,uuidaccount,token) //Create account
+	//fmt.Println("deeeeeee 3")
+
 	u.Respond(w, resp)
 }
