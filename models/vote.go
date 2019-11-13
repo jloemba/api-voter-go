@@ -9,6 +9,10 @@ import (
 
 )
 
+type UUIDVote struct{
+	user [10]string `json:"user"`
+}
+
 
 //a struct to rep user account
 type Vote struct {
@@ -16,7 +20,7 @@ type Vote struct {
 	UUID      string `json:"uuid" gorm:"primary_key"`
 	Title    string `json:"title"`
 	Description string `json:"description"`
-	UUIDVote    string `json:"uuidvote"`
+	UUIDVote    UUIDVote
 	StartDate  time.Time `json:"start_date"`
 	EndDate  time.Time `json:"end_date"`
 
@@ -156,3 +160,24 @@ func SingleVote(params string, json *Vote)  (map[string]interface{}) {
 }
 
 
+func SubmitVote(uuidvote string , uuidaccount string ) (map[string]interface{}) {
+
+	//récupérer le vote
+	rowVote := &Vote{}
+	voteFound := GetDB().Table("votes").Where("UUID = ?", uuidvote).First(rowVote).Error
+
+
+	//modifier le vote pour y mettre l'uuidvote 
+	rowAccount := &Account{}
+	accountFound := GetDB().Table("account").Where("UUID = ?", uuidaccount).First(rowAccount).Error
+
+
+	//
+	//vote.UUID = uuid.NewV4().String()
+
+	//GetDB().Create(vote)
+
+	response := u.Message(true, "Le sujet de vote a été créé")
+	//response["vote"] = vote
+	return response
+}
