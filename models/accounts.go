@@ -99,9 +99,53 @@ func DeleteUserHandler(uuid string) (map[string]interface{}) {
 		return response
 	}
 	var checkAccount Account
-	db.Where("name = ?", uuid).Find(&checkAccount)
+	db.Where("uuid = ?", uuid).Find(&checkAccount)
 	db.Delete(&checkAccount)
 	response := u.Message(true, "le compte a été supprimé")
+	return response
+}
+
+// PutUserHandler is updating a user from the given uuid param.
+func (account *Account) PutUserHandler(uuid string) (map[string]interface{}) {
+
+	var checkAccount Account
+	err := db.Where("uuid = ?", uuid).Find(&checkAccount)
+
+
+	//fmt.Println(json)
+
+	//si le sujet de vote n'existe pas
+	if err == nil {
+		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
+	}
+
+	if len(account.Email) > 0 {
+		checkAccount.Email = account.Email
+	}
+	if !account.Birthdate.IsZero() {
+		checkAccount.Birthdate = account.Birthdate
+	}
+	if len(account.Password) > 0 {
+		checkAccount.Password = account.Password
+	}
+	if account.Accesslevel <= 0 {
+		checkAccount.Accesslevel = account.Accesslevel
+	}
+
+	if resp, ok := checkAccount.Validate(); !ok {
+		return resp
+	}
+	checkAccount.UpdatedAt = time.Now()
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(checkAccount.Password), bcrypt.DefaultCost)
+	checkAccount.Password = string(hashedPassword)
+	
+	if err := GetDB().Update(checkAccount); err != nil {
+		response := u.Message(false, "update n'a pas fonctionner")
+		return response
+	}
+	response := u.Message(true, "update a fonctionner")
+	response["account"] = account
 	return response
 }
 
