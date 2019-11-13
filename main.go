@@ -17,8 +17,6 @@ func main() {
 	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 	router.HandleFunc("/api/user/delete/{uuid}", controllers.DeleteUser).Methods("DELETE")
 	router.HandleFunc("/api/user/put/{uuid}", controllers.PutUser).Methods("PUT")
-	router.HandleFunc("/api/contacts/new", controllers.CreateContact).Methods("POST")
-	router.HandleFunc("/api/me/contacts", controllers.GetContactsFor).Methods("GET") //  user/2/contacts
 	router.HandleFunc("/api/vote/create", controllers.CreateVote).Methods("POST")
 	router.HandleFunc("/api/vote/update/{uuid}", controllers.EditVote).Methods("PUT")
 	router.HandleFunc("/api/vote/show/{uuid}", controllers.SingleVote).Methods("GET")

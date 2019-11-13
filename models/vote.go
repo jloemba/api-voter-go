@@ -29,7 +29,7 @@ L'UUID vote est une collection d'UUID d'utilisateurs ayant voté.
 */
 
 func (vote *Vote) Validate() (map[string]interface{}, bool) {
-	fmt.Println(vote)
+
 	//Si il y a un titre
 	if vote.Title == "" {
 		return u.Message(false, "Votre titre ne peut pas être vide."), false
@@ -69,7 +69,7 @@ func (vote *Vote) Validate() (map[string]interface{}, bool) {
 func (vote *Vote) Create() (map[string]interface{}) {
 
 	if resp, ok := vote.Validate(); !ok {
-		//fmt.Println(resp)
+
 		return resp
 	}
 
@@ -92,7 +92,7 @@ func UpdateVote(params string,json *Vote) (map[string]interface{}) {
 	if row.Title == "" {
 		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
 	}else{
-		//fmt.Println(err)
+
 		if(json.Title != ""){
 			row.Title = json.Title
 		}
@@ -128,8 +128,7 @@ func DeleteVote(params string, json *Vote)  (map[string]interface{}) {
 		fmt.Println(err)
 		return u.Message(false, "Il n'y a aucun sujet de vote avec cet titre")
 	}
-		//var checkVote Vote
-		//db.Where("ID = ?", params).Find(&checkVote)
+
 	db.Delete(&row)
 	
 
