@@ -43,7 +43,7 @@ var PutUser = func(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
 
-	params := mux.Vars(r)
+	params := mux.Vars(r) 
 	if err != nil {
 		u.Respond(w, u.Message(false, "requete non valide"))
 		return
@@ -68,4 +68,7 @@ var DeleteUser = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
-
+var FetchUser = func(w http.ResponseWriter, r *http.Request){
+	resp := models.FetchUser()
+	u.Respond(w, resp)
+}

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"encoding/json"
 	"github.com/api-projet/models"
 	u "github.com/api-projet/utils"
@@ -67,7 +68,7 @@ var SubmitVote = func(w http.ResponseWriter, r *http.Request) {
 
 	//fmt.Println("deeeeeee")
 
-	//fmt.Println(mux.Vars(r))
+	fmt.Println(mux.Vars(r))
 
 	uuidvote := mux.Vars(r)["uuidvote"]
 	uuidaccount := mux.Vars(r)["uuid"]
@@ -77,5 +78,10 @@ var SubmitVote = func(w http.ResponseWriter, r *http.Request) {
 	resp := models.SubmitVote(uuidvote,uuidaccount) //Create account
 	//fmt.Println("deeeeeee 3")
 
+	u.Respond(w, resp)
+}
+
+var FetchVote = func(w http.ResponseWriter, r *http.Request){
+	resp := models.FetchVote()
 	u.Respond(w, resp)
 }

@@ -1,6 +1,7 @@
 package models
 
 import (
+	//"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	u "github.com/api-projet/utils"
@@ -195,3 +196,13 @@ func GetUser(u uint) *Account {
 }
 
 
+func FetchUser() (map[string]interface{}) {
+
+	acc := []Account{}
+	GetDB().Table("accounts").Find(&acc)
+	
+	response := u.Message(true, "Liste des utilisateurs")
+	response["user"] = acc
+	return response
+
+}

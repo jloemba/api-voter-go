@@ -163,23 +163,17 @@ func SubmitVote(uuidvote string , uuidaccount string) (map[string]interface{}) {
 	//modifier le vote pour y mettre l'uuidvote 
 	rowAccount := &Account{}
 	erraccount := GetDB().First(&rowAccount, uuidaccount)
-	//fmt.Println(rowAccount)
 
 	if erraccount != nil{
 		//return u.Message(false,"Not found")
 	}
 
-
-
-	//fmt.Println("ddddd")
 	//récupérer le vote
 	rowVote := &Vote{}
 	err := GetDB().First(&rowVote, uuidvote)
 	fmt.Println(uuidaccount)
 	rowVote.UUIDVote = append(rowVote.UUIDVote, uuidaccount)
-	//err := GetDB().Table("votes").Where("uuid_vote = ?", uuidvote).First(rowVote).Error
-	//fmt.Println(rowVote)
-	//fmt.Println("dddddd 2")
+
 
 
 	if err != nil{
@@ -189,4 +183,16 @@ func SubmitVote(uuidvote string , uuidaccount string) (map[string]interface{}) {
 	response := u.Message(true, "Le sujet de vote a été créé")
 	response["vote"] = rowVote
 	return response
+}
+
+
+func FetchVote() (map[string]interface{}) {
+
+	vt := []Vote{}
+	GetDB().Table("votes").Find(&vt)
+	
+	response := u.Message(true, "Liste des votes existantes")
+	response["vote"] = vt
+	return response
+
 }
