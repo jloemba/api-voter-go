@@ -11,7 +11,7 @@ Utilisez le makefile pour:
 #####pour une utilisation postman voici les différentes routes avec des examples de json:
 <br>
 
-Post: localhost:8888/api/user/new
+Post: localhost:8081/api/user/new
 
 {
 "first_name":"Bruce",
@@ -23,7 +23,7 @@ Post: localhost:8888/api/user/new
 
 <br>
 
-Post: localhost:8888/api/user/login
+Post: localhost:8081/api/user/login
 
 {
 "email":"t@wayne.ioa",
@@ -32,11 +32,11 @@ Post: localhost:8888/api/user/login
 
 <br>
 
-Delete: localhost:8888/api/user/delete/{uuid_voulu}
+Delete: localhost:8081/api/user/delete/{uuid_voulu}
 
 <br>
 
-Put: localhost:8888/api/user/put/{uuid_voulu}
+Put: localhost:8081/api/user/put/{uuid_voulu}
 
 {
 "first_name":"Brucee",
@@ -47,22 +47,22 @@ Put: localhost:8888/api/user/put/{uuid_voulu}
 
 <br>
 
-Post: localhost:8888/api/vote/create
+Post: localhost:8081/api/vote/create
 
 {
 "title":"Propreté des trottoirs",
 "description":"Dans le budget qui sera soumis au vote des conseillers de Paris lundi, 32 M€ seront consacrés à l’achat de nouvelles machines, plus silencieuses, plus propres et plus performantes. Il n’y aura pas d’embauche d’agents supplémentair.",
 "start_date":"2019-12-01T17:23:05.636849176+01:00",
- "end_date":"2019-12-10T17:23:05.636849176+01:00"
+"end_date":"2019-12-10T17:23:05.636849176+01:00"
 }
 
 <br>
 
-Delete: localhost:8888/api/vote/delete/{id_voulu}
+Delete: localhost:8081/api/vote/delete/{id_voulu}
 
 <br>
 
-Put: localhost:8888/api/vote/update/{id_voulu}
+Put: localhost:8081/api/vote/update/{id_voulu}
 
 {
 "title":"Présidentiel United States",
@@ -71,5 +71,5 @@ Put: localhost:8888/api/vote/update/{id_voulu}
 
 <br>
 
-Get: localhost:8888/api/vote/show/{uuid}
+Get: localhost:8081/api/vote/show/{uuid}
 

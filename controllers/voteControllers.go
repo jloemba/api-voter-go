@@ -12,9 +12,7 @@ import (
 var CreateVote = func(w http.ResponseWriter, r *http.Request) {
 
 	vote := &models.Vote{}
-	
 	err := json.NewDecoder(r.Body).Decode(vote) //decode the request body into struct and failed if any error occur
-	
 
 	if err != nil {
 		u.Respond(w, u.Message(false, "Invalid request"))
@@ -57,27 +55,27 @@ var DeleteVote = func(w http.ResponseWriter, r *http.Request) {
 var SingleVote = func(w http.ResponseWriter, r *http.Request) {
 
 	vote := &models.Vote{}
-		
+
+
 	params := mux.Vars(r)["uuid"]
 
+	
 	resp := models.SingleVote(params,vote)
 	u.Respond(w, resp)
 }
 
-var SubmitVote = func(w http.ResponseWriter, r *http.Request) {
+var SubmitVote = func(w http.ResponseWriter, req *http.Request) {
 
-	//fmt.Println("deeeeeee")
+	vote := &models.Vote{}
+	err := json.NewDecoder(req.Body).Decode(vote)
+	fmt.Println(vote)
 
-	fmt.Println(mux.Vars(r))
-
-	uuidvote := mux.Vars(r)["uuidvote"]
-	uuidaccount := mux.Vars(r)["uuid"]
-	//token := mux.Vars(r)["token-user"]
-
-	//fmt.Println("deeeeeee 2")
-	resp := models.SubmitVote(uuidvote,uuidaccount) //Create account
-	//fmt.Println("deeeeeee 3")
-
+	if err != nil {
+		u.Respond(w, u.Message(false, "Invalid request"))
+		return
+	}
+	
+	resp := models.SubmitVote(vote.UUIDVote,vote)
 	u.Respond(w, resp)
 }
 
@@ -85,3 +83,4 @@ var FetchVote = func(w http.ResponseWriter, r *http.Request){
 	resp := models.FetchVote()
 	u.Respond(w, resp)
 }
+

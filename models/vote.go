@@ -16,7 +16,7 @@ type Vote struct {
 	UUID      string `json:"uuid" gorm:"primary_key"`
 	Title    string `json:"title"`
 	Description string `json:"description"`
-	UUIDVote    pq.StringArray `gorm:"type:varchar(64)[]"`
+	UUIDVote    pq.StringArray `json:"uuid_votes" gorm:"type:varchar(64)[]"`
 	StartDate  time.Time `json:"start_date"`
 	EndDate  time.Time `json:"end_date"`
 
@@ -41,16 +41,12 @@ func (vote *Vote) Validate() (map[string]interface{}, bool) {
 		return u.Message(false, "Votre description ne peut pas être vide."), false
 	} 
 
-	//Si la date de début < .. de fin && S'elles ne sont pas vides
-	/*if vote.StartDate  == nil {
-		return u.Message(false, "Vous ne pouvez pas avoir une date de départ supérieur à la date de fin."), false
-	} */
-
 		//Email must be unique
 		temp := &Vote{}
 
 		//check for errors and duplicate emails
 		err := GetDB().Table("votes").Where("uuid = ?", temp.UUID).First(temp).Error
+
 		if err == gorm.ErrRecordNotFound {
 			return u.Message(false, "Vote non trouvé"), false
 		}
@@ -68,10 +64,10 @@ func (vote *Vote) Validate() (map[string]interface{}, bool) {
 
 func (vote *Vote) Create() (map[string]interface{}) {
 
-	if resp, ok := vote.Validate(); !ok {
-
+	/*if resp, ok := vote.Validate(); !ok {
 		return resp
-	}
+	}*/
+
 
 	vote.UUID = uuid.NewV4().String()
 
@@ -155,33 +151,48 @@ func SingleVote(params string, json *Vote)  (map[string]interface{}) {
 }
 
 
-func SubmitVote(uuidvote string , uuidaccount string) (map[string]interface{}) {
+func SubmitVote(uuidvote pq.StringArray,json *Vote) (map[string]interface{}) {
 
-	fmt.Println(uuidvote)
-	fmt.Println(uuidaccount)
+	//Check si le sujet de vote existe via son ID
+	vote := &Vote{}
+	err := GetDB().Table("votes").Where("UUID = ?", json.UUID).First(vote).Error
 
-	//modifier le vote pour y mettre l'uuidvote 
-	rowAccount := &Account{}
-	erraccount := GetDB().First(&rowAccount, uuidaccount)
-
-	if erraccount != nil{
-		//return u.Message(false,"Not found")
+	if err != nil {
+		return u.Message(false, "Il n'y a aucun sujet de vote avec cet UUID")
 	}
+
+	vote.UUIDVote = append(vote.UUIDVote, uuidvote[0])
+
+	GetDB().Model(&vote).Update(vote)
+
+	/*else{
+		fmt.Println("Vote existant")
+		fmt.Println(row)
+	}*/
+
+
+		//modifier le vote pour y mettre l'uuidvote 
+	//rowAccount := &Account{}
+	//erraccount := GetDB().First(&rowAccount, uuidaccount)
+
+	//if erraccount != nil{
+		//return u.Message(false,"Not found")
+	//}
 
 	//récupérer le vote
-	rowVote := &Vote{}
-	err := GetDB().First(&rowVote, uuidvote)
-	fmt.Println(uuidaccount)
-	rowVote.UUIDVote = append(rowVote.UUIDVote, uuidaccount)
+	//rowVote := &Vote{}
+	//err := GetDB().First(&rowVote, uuidvote)
+	//fmt.Println(uuidaccount)
+	//rowVote.UUIDVote = append(rowVote.UUIDVote, uuidaccount)
 
 
 
-	if err != nil{
+	//if err != nil{
 		//return u.Message(false,"Not found")
-	}
+	//}
 
-	response := u.Message(true, "Le sujet de vote a été créé")
-	response["vote"] = rowVote
+	response := u.Message(true, "Le vote a été soumis")
+	response["vote"] = vote
 	return response
 }
 

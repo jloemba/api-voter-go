@@ -1,0 +1,20 @@
+[
+{
+    "first_name":"Joris",
+    "last_name":"Loemba",
+    "email": "j@loemba.io",
+    "password":"vuejsdev"
+},
+{
+    "first_name":"Louis",
+    "last_name":"Deluche",
+    "email": "l@deluche.io",
+    "password":"golangdev"
+},
+{
+    "first_name":"Bruce", 
+    "last_name":"Wayne",
+    "email": "t@wayne.io",
+    "password":"marthajjjj77777"
+}
+]

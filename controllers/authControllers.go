@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"encoding/json"
 	"github.com/api-projet/models"
 	u "github.com/api-projet/utils"
@@ -31,7 +32,7 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "requete non valide"))
 		return
 	}
-
+	fmt.Println(account)
 	resp := models.Login(account.Email, account.Password)
 	u.Respond(w, resp)
 }

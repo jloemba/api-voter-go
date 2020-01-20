@@ -78,6 +78,7 @@ func (account *Account) Create() (map[string]interface{}) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(account.Password), bcrypt.DefaultCost)
 	account.Password = string(hashedPassword)
 	account.UUID = uuid.NewV4().String()
+	account.Accesslevel = 1
 
 	GetDB().Create(account)
 
@@ -139,6 +140,10 @@ func PutUserHandler(params string,json *Account) (map[string]interface{}) {
 			temp.Last_name = json.Last_name
 		}
 
+		if(json.Accesslevel != temp.Accesslevel ){
+			temp.Accesslevel = json.Accesslevel
+		}
+
 
 		temp.UpdatedAt = time.Now()
 		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(temp.Password), bcrypt.DefaultCost)
@@ -166,10 +171,7 @@ func Login(email, password string) (map[string]interface{}) {
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(account.Password), []byte(password))
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
-		return u.Message(false, "login invalide")
-	}
-
+	
 
 	//Create JWT token
 	id := uuid.NewV4().String()

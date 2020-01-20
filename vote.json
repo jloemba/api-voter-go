@@ -1,0 +1,13 @@
+[
+{
+    "title":"BREXIT",
+    "description":"Consiste à trancher la decision sur le fait que l'UK quitte l'UE.",
+    "start_date":"2019-12-01T17:23:05.636849176+01:00",
+    "end_date":"2019-12-10T17:23:05.636849176+01:00"
+},
+{
+    "title":"Présidentielles 2022",
+    "description":"Le dernier tour pour élir le prochain président de la république française",
+    "start_date":"2019-12-01T17:23:05.636849176+01:00",
+    "end_date":"2019-12-10T17:23:05.636849176+01:00"
+}]
